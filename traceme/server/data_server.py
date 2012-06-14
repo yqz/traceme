@@ -8,6 +8,7 @@ from tornado.netutil import TCPServer
 from tornado.ioloop import IOLoop
 from trace_record_pb2 import TraceRecord
 
+define("port", default=8888, help="The port number which the server listens to")
 define("mysql_host", default="127.0.0.1:3306", help="MySql server db")
 define("number_of_process", default=0, help="Number of process used to run this server. Default is the number of cores.")
 
@@ -25,14 +26,19 @@ class DataServer(TCPServer):
 
     def _handle_data(self, stream, data):
         '''TODO: Handle the data sent from client'''
-        print data
-        stream.close()
+        record = TraceRecord()
+        try:
+            record.ParseFromString(data)
+            if record.IsInitialized():
+                print record.longitude
+        finally:
+            stream.close()
 
 
 if __name__ == '__main__':
     options.parse_command_line()
 
     server = DataServer()
-    server.bind(8888)
+    server.bind(options.port)
     server.start(options.number_of_process)
     IOLoop.instance().start()
