@@ -1,0 +1,17 @@
+package traceme.server;
+
+message TraceRecord {
+    enum State {
+        WALKING = 0;
+        RUNNING = 1;
+        DRIVING = 2;
+        BICYCLING = 3;
+        STEADY = 4;
+    }
+    required State state = 1;
+    required double longitude = 2;
+    required double latitude = 3;
+    required int64 timestamp = 4;
+    optional double altitude = 16;
+    optional float speed = 17;
+}
