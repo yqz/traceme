@@ -1,5 +1,8 @@
 package traceme.server;
 
+option java_package = "traceme.android";
+option java_outer_classname = "RecordData";
+
 message TraceRecord {
     enum State {
         WALKING = 0;
