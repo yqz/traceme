@@ -3,6 +3,7 @@ package traceme.server;
 option java_package = "traceme.android";
 option java_outer_classname = "RecordData";
 
+// TraceRecord is used to track user states.
 message TraceRecord {
     enum State {
         WALKING = 0;
@@ -11,10 +12,27 @@ message TraceRecord {
         BICYCLING = 3;
         STEADY = 4;
     }
-    required State state = 1;
-    required double longitude = 2;
-    required double latitude = 3;
-    required int64 timestamp = 4;
+    required string cid = 1;
+    required State state = 2;
+    required double longitude = 3;
+    required double latitude = 4;
+    required int64 timestamp = 5;
     optional double altitude = 16;
     optional float speed = 17;
+}
+
+// ReportRecord is reported daily for software info.
+message ReportRecord {
+    required string cid = 1;
+    required string version = 2;
+}
+
+message DataPack {
+    enum RecordType {
+        TRACE_RECORD = 0;
+        REPORT_RECORD = 1;
+    }
+    required RecordType recordType = 1;
+    optional TraceRecord traceRecord = 2;
+    optional ReportRecord  reportRecord = 3;
 }
