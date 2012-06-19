@@ -7,9 +7,16 @@ from tornado.options import define, options
 from tornado.netutil import TCPServer
 from tornado.ioloop import IOLoop
 from trace_record_pb2 import DataPack
+from storage import MySQLStorageManager
+
+# The engine chosen
+storage_engine = MySQLStorageManager
 
 define("port", default=8888, help="The port number which the server listens to")
-define("mysql_host", default="127.0.0.1:3306", help="MySql server db")
+define("mysql_host", default="127.0.0.1", help="MySql server db")
+define("db", default="traceme", help="MySql server db")
+define("user", default="root", help="MySql server db")
+define("passwd", default="123456", help="MySql server db")
 define("number_of_process", default=0, help="Number of process used to run this server. Default is the number of cores.")
 
 class DataServer(TCPServer):
@@ -41,7 +48,7 @@ class DataServer(TCPServer):
             self._handle_report_record(dp.reportRecord)
 
     def _handle_trace_record(self, record):
-        print record.cid
+        storage_engine.instance().store_trace_record(record)
 
     def _handle_report_record(self, record):
         pass
